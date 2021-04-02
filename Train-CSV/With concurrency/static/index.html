@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<h1>Contact Entries :</h1>
+<br>
+<br>
+
+<table class="table table-dark" >
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Train Number</th>
+      <th scope="col">Train Name</th>
+      <th scope="col">Starts</th>
+      <th scope="col">Ends</th>
+      
+    </tr>
+  </thead>
+  <tbody id="myTable">    
+  </tbody>
+</table>
+<div class="Container">
+<div class="table-responsive" id="pagination_data">
+
+</div>
+</div>
+</body>
+</html>
+<script>
+//  fetch('http://localhost:8000/fetch')
+//     .then(response=>response.json())
+//     .then(data=>{
+//       for(i=0; i<data.length-1; i++){
+        
+//         var table = document.getElementById("myTable");
+//         var row = table.insertRow(i);
+//         var cell1 = row.insertCell(0);
+//         var cell2 = row.insertCell(1);
+//         var cell3 = row.insertCell(2);
+//         var cell4 = row.insertCell(3);
+//         var cell5 = row.insertCell(4);
+        
+//         cell1.innerHTML = data[i+1]['id'];
+//         cell2.innerHTML = data[i+1]['trainNo'];
+//         cell3.innerHTML = data[i+1]['trainName'];
+//         cell4.innerHTML = data[i+1]['starts'];
+//         cell5 .innerHTML = data[i+1]['ends'];
+        
+//          console.log(data)
+
+            
+//       }
+//     })
+$(document).ready(function(){
+  
+  function load_data(page){
+    $.ajax({
+      url:"http://localhost:8000/fetch",
+      //method
+      data:{page:page},
+      success:function(data){
+        $('#pagination_data').html(data)
+      }
+    })
+  }
+
+$(document).on('click','.pagination_link',function(){
+  var page =$(this).attr("id");
+  load_data(page);
+});
+})
+        
+
+</script>
+   <!-- $('#tab').append("<tr><td>"+data[i]['id']+"</td><td>"+data[i]['trainNo']+"</td><td>"+data[i]['trainName']+"</td><td>"+data[i]['starts']+
+    "</td><td>"+data[i]['ends']+"</td></tr>") -->

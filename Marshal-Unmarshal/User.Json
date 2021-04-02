@@ -1,0 +1,51 @@
+[
+    {
+        "id":1,
+        "name": "Gurpreet",
+        "address":{
+            "area":"Chiloda",
+            "country":"IND"
+        }
+    },
+    {
+        "id":2,
+        "name": "Chander",
+        "address":{
+            "area":"Bunglowarea",
+            "country":"IND"
+        }
+    },
+    {
+        "id":3,
+        "name": "Harsh",
+        "address":{
+            "area":"Naroda",
+            "country":"IND"
+        }
+    },
+    {
+        "id":4,
+        "name": "Yash",
+        "address":{
+            "area":"Chankheda",
+            "country":"IND"
+        }
+    },
+    {
+        "id":5,
+        "name": "Bhagat",
+        "address":{
+            "area":"Koteshwar",
+            "country":"IND"
+        }
+    },
+    {
+        "id":6,
+        "name": "Anshu",
+        "address":{
+            "area":"Motera",
+            "country":"IND"
+        }
+    }
+    
+]

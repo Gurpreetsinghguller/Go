@@ -1,0 +1,27 @@
+
+<!doctype html>
+<html lang="zxx">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Images</title>
+
+
+</head>
+<body>
+	
+
+	<!-- /products-->
+
+						{{range .}}
+							<a href="#">
+								<img class="pic-1 img-fluid" src="data:image/jpeg;base64,{{.Img}}"/>
+								
+							</a>
+							{{end}}
+					
+</body>
+
+</html>

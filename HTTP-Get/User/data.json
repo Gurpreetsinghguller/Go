@@ -1,0 +1,193 @@
+{
+   "code": 200,
+   "meta": {
+     "pagination": {
+       "total": 1520,
+       "pages": 76,
+       "page": 1,
+       "limit": 20
+     }
+   },
+   "data": [
+     {
+       "id": 29,
+       "name": "Rudy Armstrong IV",
+       "email": "iv_vinay_marar@boyer-schneider.biz",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.148+05:30",
+       "updated_at": "2021-02-05T12:29:51.321+05:30"
+     },
+     {
+       "id": 33,
+       "name": "Surya Nayar Esq.",
+       "email": "surya_esq_nayar@macejkovic.name",
+       "gender": "Female",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.229+05:30",
+       "updated_at": "2021-02-05T03:50:04.229+05:30"
+     },
+     {
+       "id": 38,
+       "name": "Narinder Jain Esq.",
+       "email": "narinder_jain_esq@bahringer.info",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.329+05:30",
+       "updated_at": "2021-02-05T03:50:04.329+05:30"
+     },
+     {
+       "id": 46,
+       "name": "Baalagopaal Kocchar",
+       "email": "kocchar_baalagopaal@metz.com",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.495+05:30",
+       "updated_at": "2021-02-05T03:50:04.495+05:30"
+     },
+     {
+       "id": 47,
+       "name": "Mrs. Bhargava Saini",
+       "email": "saini_bhargava_mrs@block.info",
+       "gender": "Female",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.505+05:30",
+       "updated_at": "2021-02-05T03:50:04.505+05:30"
+     },
+     {
+       "id": 48,
+       "name": "Vaijayanti Patel",
+       "email": "vaijayanti_patel@metz-koelpin.info",
+       "gender": "Male",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.52+05:30",
+       "updated_at": "2021-02-05T03:50:04.52+05:30"
+     },
+     {
+       "id": 49,
+       "name": "Mrs. Kumuda Ahluwalia",
+       "email": "kumuda_mrs_ahluwalia@lang-spencer.name",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.53+05:30",
+       "updated_at": "2021-02-05T03:50:04.53+05:30"
+     },
+     {
+       "id": 50,
+       "name": "Chiranjeeve Butt",
+       "email": "chiranjeeve_butt@hansen-conn.co",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.551+05:30",
+       "updated_at": "2021-02-05T03:50:04.551+05:30"
+     },
+     {
+       "id": 51,
+       "name": "Opaline Tagore",
+       "email": "opaline_tagore@hickle.co",
+       "gender": "Male",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.56+05:30",
+       "updated_at": "2021-02-05T03:50:04.56+05:30"
+     },
+     {
+       "id": 53,
+       "name": "Rep. Deepali Ganaka",
+       "email": "rep_ganaka_deepali@halvorson-bauch.io",
+       "gender": "Female",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.594+05:30",
+       "updated_at": "2021-02-05T03:50:04.594+05:30"
+     },
+     {
+       "id": 54,
+       "name": "Adinath Achari",
+       "email": "adinath_achari@boehm-shields.biz",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.609+05:30",
+       "updated_at": "2021-02-05T03:50:04.609+05:30"
+     },
+     {
+       "id": 56,
+       "name": "Akroor Dwivedi",
+       "email": "dwivedi_akroor@heathcote-glover.info",
+       "gender": "Female",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.63+05:30",
+       "updated_at": "2021-02-05T03:50:04.63+05:30"
+     },
+     {
+       "id": 57,
+       "name": "Chandrani Shukla",
+       "email": "shukla_chandrani@goyette.net",
+       "gender": "Female",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.651+05:30",
+       "updated_at": "2021-02-05T03:50:04.651+05:30"
+     },
+     {
+       "id": 58,
+       "name": "Aamod Nehru DO",
+       "email": "do_aamod_nehru@wunsch.name",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.665+05:30",
+       "updated_at": "2021-02-05T03:50:04.665+05:30"
+     },
+     {
+       "id": 59,
+       "name": "Girik Pothuvaal Sr.",
+       "email": "pothuvaal_girik_sr@jacobson.org",
+       "gender": "Male",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.677+05:30",
+       "updated_at": "2021-02-05T03:50:04.677+05:30"
+     },
+     {
+       "id": 60,
+       "name": "Gotum Guneta",
+       "email": "gotum_guneta@lang.net",
+       "gender": "Male",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.68+05:30",
+       "updated_at": "2021-02-05T03:50:04.68+05:30"
+     },
+     {
+       "id": 61,
+       "name": "Gov. Chandraprabha Kaul",
+       "email": "gov_kaul_chandraprabha@wolf.co",
+       "gender": "Male",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.707+05:30",
+       "updated_at": "2021-02-05T03:50:04.707+05:30"
+     },
+     {
+       "id": 62,
+       "name": "Arjun Bhat",
+       "email": "arjun_bhat@quitzon-feil.info",
+       "gender": "Male",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.729+05:30",
+       "updated_at": "2021-02-05T03:50:04.729+05:30"
+     },
+     {
+       "id": 64,
+       "name": "Chandranath Devar DDS",
+       "email": "devar_dds_chandranath@keeling-orn.co",
+       "gender": "Female",
+       "status": "Inactive",
+       "created_at": "2021-02-05T03:50:04.762+05:30",
+       "updated_at": "2021-02-05T03:50:04.762+05:30"
+     },
+     {
+       "id": 65,
+       "name": "Ahalya Joshi LLD",
+       "email": "joshi_lld_ahalya@tremblay.info",
+       "gender": "Female",
+       "status": "Active",
+       "created_at": "2021-02-05T03:50:04.771+05:30",
+       "updated_at": "2021-02-05T03:50:04.771+05:30"
+     }
+   ]
+ }

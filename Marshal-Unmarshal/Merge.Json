@@ -1,0 +1,86 @@
+[
+  {
+    "Id": 1,
+    "Name": "Gurpreet",
+    "area": "Chiloda",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "Golang",
+        "experience": 1.2
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  },
+  {
+    "Id": 2,
+    "Name": "Chander",
+    "area": "Bunglowarea",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "React",
+        "experience": 2
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  },
+  {
+    "Id": 3,
+    "Name": "Harsh",
+    "area": "Naroda",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "ReactNative",
+        "experience": 3
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  },
+  {
+    "Id": 4,
+    "Name": "Yash",
+    "area": "Chankheda",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "Android",
+        "experience": 2.5
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  },
+  {
+    "Id": 5,
+    "Name": "Bhagat",
+    "area": "Koteshwar",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "Angularjs",
+        "experience": 5.5
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  },
+  {
+    "Id": 6,
+    "Name": "Anshu",
+    "area": "Motera",
+    "country": "IND",
+    "Techdets": [
+      {
+        "tech": "Nodejs",
+        "experience": 4.5
+      }
+    ],
+    "Email": "",
+    "Phone": "+91"
+  }
+]

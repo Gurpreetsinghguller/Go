@@ -1,0 +1,63 @@
+[
+    {
+        "id":1,
+        "tech":[
+            {
+            "tech" : "Golang",
+            "experience" :1.2
+            }
+            
+        ]
+    },
+    {
+        "id":2,
+        "tech":[
+            {
+            "tech" : "React",
+            "experience" :2
+            }
+            
+        ]
+    },
+    {
+        "id":3,
+        "tech":[
+            {
+            "tech" : "ReactNative",
+            "experience" :3
+            }
+            
+        ]
+    },
+    {
+        "id":4,
+        "tech":[
+            {
+            "tech" : "Android",
+            "experience" :2.5
+            }
+            
+        ]
+    },
+    {
+        "id":5,
+        "tech":[
+            {
+            "tech" : "Angularjs",
+            "experience" :5.5
+            }
+            
+        ]
+    },
+    {
+        "id":6,
+        "tech":[
+            {
+            "tech" : "Nodejs",
+            "experience" :4.5
+            }
+            
+        ]
+    }
+
+]

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+</style>
+<style>
+  a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+  }
+  
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .previous {
+    background-color: #f1f1f1;
+    color: black;
+  }
+  
+  .next {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .round {
+    border-radius: 50%;
+  }
+  </style>
+</head>
+<body>
+<h1>Contact Entries :</h1>
+<br>
+<br>
+
+<table class="table table-dark" >
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Train Number</th>
+      <th scope="col">Train Name</th>
+      <th scope="col">Starts</th>
+      <th scope="col">Ends</th>
+      
+    </tr>
+  </thead>
+  <tbody id="myTable">    
+  </tbody>
+</table>
+
+<h2>Previous and Next Buttons</h2>
+
+<a  class="previous" id="previous">&laquo; Previous</a>
+<a  class="next" id="next" onclick={load()}>Next &raquo;</a>
+<!-- 
+<a href="#" class="previous round">&#8249;</a>
+<a href="#" class="next round">&#8250;</a> -->
+</body>
+</html>
+<script>
+  // next="next";
+  // pre="previous"
+  window.i=1;
+  function load(){
+    
+console.log("clicked ")
+ fetch(`http://localhost:9000/fetch?page=`+i)
+    .then(response=>response.json())
+    .then(data=>{
+      // if(calledVal=='previous')
+      //   window.i--;
+      for(let i=0; i<data.length-1; i++){
+        
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(i);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+        
+        cell1.innerHTML = data[i+1]['id'];
+        cell2.innerHTML = data[i+1]['trainNo'];
+        cell3.innerHTML = data[i+1]['trainName'];
+        cell4.innerHTML = data[i+1]['starts'];
+        cell5 .innerHTML = data[i+1]['ends'];
+        
+        //  console.log(data)
+
+            
+      }
+      // if(calledVal=='next')
+        window.i++;
+    
+    })
+
+  }                  
+load()             
+
+</script>
+   <!-- $('#tab').append("<tr><td>"+data[i]['id']+"</td><td>"+data[i]['trainNo']+"</td><td>"+data[i]['trainName']+"</td><td>"+data[i]['starts']+
+    "</td><td>"+data[i]['ends']+"</td></tr>") -->
+
+<!-- localhost:8080/route?stname1=MADGOAN JN.&stname2=SAWANTWADI R -->
+<!-- 
+st := r.URL.Query().Get("stname")
+dtn := r.URL.Query().Get("dtname") -->

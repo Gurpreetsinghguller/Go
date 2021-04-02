@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+  
+  </head>
+  <body>
+    
+      
+     
+      <input id ="CreateRoom"type="submit" value="Create Room"> 
+      <input id="JoinRoom" type="submit" value="Join Room">
+      <br>
+      <br>
+      <p id="RoomCode"></p>
+      <label for="fname">Enter Room ID to join:</label>
+      <input type="text" id="JoinCode" name="fname"><br><br>
+ 
+   
+   <br>
+   <br>
+   <br>
+
+   <input type="text" id="SendMsg" name="fname"><br><br>
+   <input id="SendMessage" type="submit" value="Send message">
+   <br>
+   <br>
+   <p id="receivedMessage"></p>
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      
+      var socket = io();
+     
+      
+      
+
+        $('#CreateRoom').click(function(){
+        socket.emit('createRoom', "", function(data){
+          $('#JoinCode').val(data);
+        });
+        });
+
+        $('#JoinRoom').click(function(){
+
+          socket.emit('joinRoom',$('#JoinCode').val(), function(data){
+          // $('#receivedMessage').append($('<li>').text('Acknowledgement from server: ' + data));
+        });
+        });
+
+        $('#SendMessage').click(function(){
+          var Response={
+        roomid:$('#JoinCode').val(),
+        message:$('#SendMsg').val()
+           };
+          console.log(Response)
+          socket.emit('chat',Response, function(data){
+          $('#receivedMessage').append(data);
+        });
+        });
+        socket.on('receivemsg', function (msg) {
+          $('#receivedMessage').append( msg);
+        });
+
+
+        
+    </script>
+  </body>
+</html>
