@@ -1,118 +1,238 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type Contact struct {
-	Id      string
-	Name    string
-	Email   string
-	Subject string
-	Message string
+type RegisterDetails struct {
+	gorm.Model
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+type SigninDetails struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+type SigninResponse struct {
+	Role  string `json:"role"`
+	Token string `json:"token"`
+}
+type Error struct {
+	IsError bool   `json:"isError"`
+	Message string `json:"message"`
+}
+type Role struct {
+	Role string `json:"role"`
 }
 
-func dbConn() *sql.DB {
-	db, _ := sql.Open("postgres", "postgres://postgres:1234@localhost/contact?sslmode=disable")
-	return db
-}
+var mySigningKey = []byte("generatetokenusingthiskey")
 
-func checkError(err error) {
+func AutoMigrate() {
+	db := DbConn()
+	db.AutoMigrate(&RegisterDetails{})
+	defer db.Close()
+}
+func SetError(err Error, message string) Error {
+	err.IsError = true
+	err.Message = message
+	return err
+}
+func DbConn() *gorm.DB {
+	connection, err := gorm.Open("postgres", "postgres://admin:1234@localhost/login?sslmode=disable")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln("wrong database url")
 	}
+	sqldb := connection.DB()
+	err = sqldb.Ping()
+	if err != nil {
+		log.Fatal("database is disconnected")
+	}
+	return connection
 }
 
-func saveData(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
-	defer db.Close()
-	body, err := ioutil.ReadAll(r.Body)
-	checkError(err)
-	var contact Contact
-	err1 := json.Unmarshal(body, &contact)
-	checkError(err1)
-	qry := "INSERT INTO contact(name,email,subject,message) VALUES($1,$2,$3,$4)"
-	_, err3 := db.Exec(qry, contact.Name, contact.Email, contact.Subject, contact.Message)
-	checkError(err3)
-	w.Write(body)
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }
-func getContacts(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
-	defer db.Close()
-	qry := "SELECT *FROM contact"
-	rows, err := db.Query(qry)
-	checkError(err)
-	var contact Contact
-	var contacts []Contact
-	for rows.Next() {
-		err := rows.Scan(&contact.Id, &contact.Name, &contact.Email, &contact.Subject, &contact.Message)
-		checkError(err)
-		contacts = append(contacts, contact)
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
+func GenerateJWT(email, role string) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["authorized"] = true
+	claims["email"] = email
+	claims["role"] = role
+	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+	tokenString, err := token.SignedString(mySigningKey)
+	if err != nil {
+		fmt.Errorf("Something Went Wrong: %s", err.Error())
+		return "", err
 	}
-	pBytes, err := json.MarshalIndent(contacts, "", " ")
+	return tokenString, nil
+}
+
+func IsAuthorized(handle func(w http.ResponseWriter, r *http.Request)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Header["Token"] != nil {
+			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("There is an error")
+				}
+				return mySigningKey, nil
+			})
+			if err != nil {
+				var err Error
+				// err.IsError = true
+				err = SetError(err, "Your Token has been expired")
+				json.NewEncoder(w).Encode(err)
+				return
+			}
+			claims, ok := token.Claims.(jwt.MapClaims)
+			if token.Valid && claims["role"] == "user" && ok {
+				r.Header.Set("Role", "User")
+				handle(w, r)
+			} else if token.Valid && claims["role"] == "admin" && ok {
+				r.Header.Set("Role", "Admin")
+				handle(w, r)
+			}
+		} else {
+
+			w.Write([]byte("Error in Token"))
+		}
+	})
+}
+func Registeration(w http.ResponseWriter, r *http.Request) {
+	bodydata, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Fatalln("Error in Reading body")
+	}
+	var registerationDetails RegisterDetails
+	err = json.Unmarshal(bodydata, &registerationDetails)
+	if err != nil {
+		log.Fatalln("Error in Unmarshaling")
+	}
+	DB := DbConn()
+	defer DB.Close()
+	var checkuser RegisterDetails
+	DB.Where("email = 	?", registerationDetails.Email).First(&checkuser)
+	//checks email is alredy in use
+	if checkuser.Email != "" {
+		var err Error
+		err = SetError(err, "Email already in use")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	registerationDetails.Password, err = HashPassword(registerationDetails.Password)
+	if err != nil {
+		log.Fatalln("Error in Password Hashing")
+	}
+	DB.Create(&registerationDetails)
+	bytedata, err := json.MarshalIndent(registerationDetails, "", "  ")
+	if err != nil {
+		var err Error
+		err = SetError(err, "Error in Marshaling")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytedata)
+}
+
+func Signin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	DB := DbConn()
+	defer DB.Close()
+	var signinDetails SigninDetails
+	var registerationDetails RegisterDetails
+	json.NewDecoder(r.Body).Decode(&signinDetails)
+	DB.Where("email =?", signinDetails.Email).First(&registerationDetails)
+	if registerationDetails.Email == "" {
+		var err Error
+		err = SetError(err, "Invalid Email or Password")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	chkpass := CheckPasswordHash(signinDetails.Password, registerationDetails.Password)
+	if !chkpass {
+		var err Error
+		err = SetError(err, "Invalid Email or Password")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	token, err := GenerateJWT(registerationDetails.Email, registerationDetails.Role)
+	if err != nil {
+		var err Error
+		err = SetError(err, "Failed to generate token")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	var signinResponse SigninResponse
+	signinResponse.Token = token
+	signinResponse.Role = registerationDetails.Role
+	pBytes, err := json.MarshalIndent(signinResponse, " ", " ")
 	w.Write(pBytes)
+
 }
-func getContact(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	db := dbConn()
-	defer db.Close()
-	qry := "SELECT *FROM contact WHERE id=" + vars["id"]
-	row := db.QueryRow(qry)
-	var contact Contact
-	err := row.Scan(&contact.Id, &contact.Name, &contact.Email, &contact.Subject, &contact.Message)
-	flag := true
-	if sql.ErrNoRows == err {
-		flag = false
-	} else {
-		checkError(err)
+func AdminDashboard(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("admin dashboad called")
+
+	if r.Header.Get("Role") != "Admin" {
+		fmt.Println("Unauthorized accesss")
+		w.Write([]byte("Unauthorized accesss"))
+		return
 	}
-	pBytes, err := json.MarshalIndent(contact, "", " ")
-	checkError(err)
-	if flag {
-		w.Write([]byte(pBytes))
-	} else {
-		w.Write([]byte("No rows found"))
+	fmt.Println("admin dashboad")
+	w.Write([]byte("This is admin Dashboard"))
+}
+func UserDashboard(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("user dashboad called")
+
+	if r.Header.Get("Role") != "User" {
+		fmt.Println("Unauthorized accesss")
+		w.Write([]byte("Unauthorized accesss"))
+		return
 	}
-
+	fmt.Println("user dashboad")
+	w.Write([]byte("This is User Dashboard"))
 }
 
-func updateContact(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	db := dbConn()
-	defer db.Close()
-	body, err := ioutil.ReadAll(r.Body)
-	checkError(err)
-	var contact Contact
-	json.Unmarshal(body, &contact)
-	qry := "UPDATE contact SET name = $1 , email = $2 , subject = $3 , message = $4 WHERE id = $5"
-
-	_, err1 := db.Exec(qry, contact.Name, contact.Email, contact.Subject, contact.Message, vars["id"])
-	checkError(err1)
-	w.Write(body)
-}
-func deleteContact(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	db := dbConn()
-	defer db.Close()
-	qry := "DELETE FROM contact WHERE id=$1"
-	_, err := db.Exec(qry, vars["id"])
-	checkError(err)
-	w.Write([]byte("DELETE REQUEST SUCCESS FOR " + vars["id"]))
-}
 func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/api/Contact", saveData).Methods("POST")
-	r.HandleFunc("/api/Contact", getContacts).Methods("GET")
-	r.HandleFunc("/api/Contact/{id}", getContact).Methods("GET")
-	r.HandleFunc("/api/Contact/{id}", updateContact).Methods("PUT")
-	r.HandleFunc("/api/Contact/{id}", deleteContact).Methods("DELETE")
-	http.ListenAndServe(":8000", r)
+	AutoMigrate()
+	router := mux.NewRouter()
+	router.HandleFunc("/api/Register", Registeration).Methods("POST")
+	router.HandleFunc("/api/Signin", Signin).Methods("POST")
+	router.Handle("/api/admin", IsAuthorized(AdminDashboard)).Methods("GET")
+	router.Handle("/api/user", IsAuthorized(UserDashboard)).Methods("GET")
+	router.Methods("OPTIONS").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Request-Headers, Access-Control-Request-Method, Connection, Host, Origin, User-Agent, Referer, Cache-Control, X-header")
+	})
+	fmt.Println("Server started at http://localhost:8000")
+	http.ListenAndServe(":8000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Access-Control-Allow-Origin", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(router))
 }
